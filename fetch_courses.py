@@ -32,14 +32,17 @@ def fetch_courses(url, cookie, target_courses):
         for row in table.find('tbody').find_all('tr'):
             cells = row.find_all('td')
             course_code = cells[1].text.strip()
-            if course_code in target_courses:
+            seats_available = int(cells[6].text.strip()) if cells[6].text.strip().isdigit() else 0
+            
+            # Only include courses with available seats
+            if course_code in target_courses and seats_available > 0:
                 course = {
                     'Course Code': course_code,
                     'Section': cells[2].text.strip(),
                     'Faculty': cells[3].text.strip(),
                     'Time': cells[4].text.strip(),
                     'Room': cells[5].text.strip(),
-                    'Seats Available': cells[6].text.strip(),
+                    'Seats Available': seats_available,
                 }
                 courses.append(course)
     else:
@@ -71,12 +74,12 @@ def main():
     print("Fetching courses...")
     courses = fetch_courses(url, cookie, target_courses)
     if courses:
-        print("Filtered Courses:")
+        print("Filtered Courses with Available Seats:")
         for course in courses:
             print(course)
         save_to_csv(courses, 'filtered_courses.csv')
     else:
-        print("No matching courses found.")
+        print("No matching courses with available seats found.")
 
 if __name__ == "__main__":
     main()
