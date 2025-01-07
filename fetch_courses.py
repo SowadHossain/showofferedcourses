@@ -61,7 +61,7 @@ def save_to_csv(data, output_file):
     else:
         print("No data to save.")
 
-def main():
+def fetch_course_data():
     # Load configuration
     config = load_config('config.json')
     cookie = config['cookie']
@@ -82,4 +82,4 @@ def main():
         print("No matching courses with available seats found.")
 
 if __name__ == "__main__":
-    main()
+    fetch_course_data()
